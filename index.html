@@ -14,8 +14,16 @@
         const token = hashParams.get("token") || "";
         const state = hashParams.get("state") || queryParams.get("state") || "";
 
-        const vscodeScheme = queryParams.get("vscodeScheme") || "vscode";
-        const extensionId = queryParams.get("extensionId") || "taskio.taskio";
+        // Prefer embedding the scheme in the state: "<nonce>.<scheme>".
+        let vscodeScheme = "vscode";
+        const schemeFromState = (() => {
+          const lastDot = state.lastIndexOf(".");
+          if (lastDot <= 0) return "";
+          return state.slice(lastDot + 1);
+        })();
+        if (schemeFromState) vscodeScheme = schemeFromState;
+
+        const extensionId = "taskio.taskio";
 
         if (!token) {
           document.body.textContent =
@@ -37,4 +45,3 @@
     </script>
   </body>
 </html>
-

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Taskio • Trello Auth</title>
+  </head>
+  <body>
+    <script>
+      (function () {
+        const hashParams = new URLSearchParams((location.hash || "").replace(/^#/, ""));
+        const queryParams = new URLSearchParams(location.search || "");
+
+        const token = hashParams.get("token") || "";
+        const state = hashParams.get("state") || queryParams.get("state") || "";
+
+        const vscodeScheme = queryParams.get("vscodeScheme") || "vscode";
+        const extensionId = queryParams.get("extensionId") || "taskio.taskio";
+
+        if (!token) {
+          document.body.textContent =
+            "No token found in URL fragment. Please return to VS Code and try again.";
+          return;
+        }
+
+        const uri =
+          vscodeScheme +
+          "://" +
+          extensionId +
+          "/trello-auth?token=" +
+          encodeURIComponent(token) +
+          "&state=" +
+          encodeURIComponent(state);
+
+        location.replace(uri);
+      })();
+    </script>
+  </body>
+</html>
+

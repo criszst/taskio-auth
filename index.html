@@ -37,8 +37,7 @@
           extensionId +
           "/trello-auth?token=" +
           encodeURIComponent(token) +
-          "&state=" +
-          encodeURIComponent(state);
+          (state ? "&state=" + encodeURIComponent(state) : "");
 
         location.replace(uri);
       })();

@@ -9,20 +9,19 @@
       :root {
         --bg: #05030a;
         --surface: #11101a;
-        --surface-2: #171622;
-        --surface-3: #201d31;
 
         --text: #f7f2ff;
-        --muted: #a39aad;
-        --muted-2: #7f758d;
+        --muted: #9f96aa;
+        --muted-2: #776f82;
 
         --purple: #7c3aed;
         --purple-2: #5b21b6;
         --purple-3: #a78bfa;
 
-        --red: #ef4444;
-        --red-2: #7f1d1d;
-        --red-3: #fecaca;
+        --red-soft: rgba(239, 68, 68, 0.1);
+        --red-border: rgba(239, 68, 68, 0.22);
+        --red-text: #fecaca;
+        --red-muted: #fca5a5;
 
         --border: rgba(255, 255, 255, 0.09);
         --border-strong: rgba(255, 255, 255, 0.15);
@@ -71,7 +70,7 @@
       }
 
       .shell {
-        width: min(100%, 760px);
+        width: min(100%, 840px);
         position: relative;
       }
 
@@ -79,7 +78,7 @@
         position: relative;
         overflow: hidden;
         border-radius: 28px;
-        background: rgba(13, 12, 21, 0.94);
+        background: rgba(13, 12, 21, 0.95);
         border: 1px solid var(--border);
         box-shadow:
           0 30px 90px rgba(0, 0, 0, 0.56),
@@ -89,86 +88,57 @@
 
       .top-preview {
         position: relative;
-        min-height: 128px;
+        min-height: 118px;
         padding: 24px;
         border-bottom: 1px solid var(--border);
         background:
           linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(0, 0, 0, 0.08)),
           linear-gradient(90deg, rgba(255, 255, 255, 0.045), transparent);
+        display: grid;
+        place-items: center;
       }
 
-      .mini-window {
-        position: relative;
-        max-width: 520px;
-        min-height: 86px;
+      .brand-card {
+        width: min(100%, 420px);
+        min-height: 72px;
         border-radius: 20px;
         background: rgba(12, 11, 20, 0.88);
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 18px 56px rgba(0, 0, 0, 0.3);
-        padding: 18px 18px 18px 76px;
-      }
-
-      .app-icon {
-        position: absolute;
-        left: 18px;
-        top: 18px;
-        width: 42px;
-        height: 42px;
-        border-radius: 14px;
         display: grid;
         place-items: center;
-        background: linear-gradient(135deg, var(--purple), var(--purple-2));
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
-        font-weight: 900;
-        letter-spacing: -0.05em;
+        padding: 18px;
       }
 
-      .mini-title {
-        font-size: 15px;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-      }
-
-      .mini-subtitle {
-        margin-top: 6px;
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.45;
-      }
-
-      .mini-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 7px;
-        margin-top: 12px;
-      }
-
-      .tag {
-        border-radius: 999px;
-        padding: 5px 9px;
-        color: #ddd6fe;
-        background: rgba(124, 58, 237, 0.14);
-        border: 1px solid rgba(167, 139, 250, 0.16);
-        font-size: 11px;
-        font-weight: 700;
+      .brand-title {
+        font-size: clamp(28px, 5vw, 42px);
+        line-height: 1;
+        font-weight: 950;
+        letter-spacing: -0.08em;
+        text-transform: uppercase;
+        background: linear-gradient(135deg, #b794f6 0%, #7c3aed 42%, #11101a 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
       }
 
       .content {
         position: relative;
-        padding: 36px 34px 34px;
+        padding: 38px 34px 34px;
       }
 
       h1 {
         margin: 0;
-        max-width: 580px;
-        font-size: clamp(30px, 5vw, 46px);
-        line-height: 1;
+        max-width: none;
+        font-size: clamp(28px, 4.2vw, 44px);
+        line-height: 1.04;
         letter-spacing: -0.065em;
+        white-space: nowrap;
       }
 
       .lead {
         margin: 18px 0 0;
-        max-width: 580px;
+        max-width: 610px;
         color: var(--muted);
         font-size: 16px;
         line-height: 1.7;
@@ -197,24 +167,24 @@
       }
 
       .status.success {
-        border-color: rgba(124, 58, 237, 0.28);
+        border-color: rgba(124, 58, 237, 0.22);
         background:
-          linear-gradient(180deg, rgba(124, 58, 237, 0.1), rgba(255, 255, 255, 0.014));
+          linear-gradient(180deg, rgba(124, 58, 237, 0.08), rgba(255, 255, 255, 0.014));
       }
 
       .status.error {
-        border-color: rgba(239, 68, 68, 0.45);
+        border-color: var(--red-border);
         background:
-          linear-gradient(180deg, rgba(239, 68, 68, 0.16), rgba(127, 29, 29, 0.1)),
-          rgba(18, 10, 14, 0.92);
+          linear-gradient(180deg, var(--red-soft), rgba(255, 255, 255, 0.01)),
+          rgba(18, 10, 14, 0.86);
       }
 
       .status.error .status-title {
-        color: var(--red-3);
+        color: var(--red-text);
       }
 
       .status.error .status-text {
-        color: #fca5a5;
+        color: var(--red-muted);
       }
 
       .actions {
@@ -253,8 +223,8 @@
         color: white;
         background: linear-gradient(135deg, var(--purple), var(--purple-2));
         box-shadow:
-          0 14px 30px rgba(91, 33, 182, 0.28),
-          inset 0 1px 0 rgba(255, 255, 255, 0.16);
+          0 14px 30px rgba(91, 33, 182, 0.24),
+          inset 0 1px 0 rgba(255, 255, 255, 0.14);
       }
 
       .primary:hover {
@@ -311,6 +281,17 @@
         display: none;
       }
 
+      @media (max-width: 760px) {
+        .shell {
+          width: min(100%, 620px);
+        }
+
+        h1 {
+          white-space: normal;
+          max-width: 540px;
+        }
+      }
+
       @media (max-width: 680px) {
         body {
           padding: 18px;
@@ -323,20 +304,12 @@
 
         .top-preview {
           padding: 18px;
-          min-height: 112px;
+          min-height: 104px;
         }
 
-        .mini-window {
-          padding: 16px 16px 16px 68px;
+        .brand-card {
+          min-height: 68px;
           border-radius: 18px;
-        }
-
-        .app-icon {
-          left: 16px;
-          top: 16px;
-          width: 38px;
-          height: 38px;
-          border-radius: 13px;
         }
 
         .content {
@@ -358,49 +331,36 @@
     <main class="shell">
       <section class="auth-card">
         <div class="top-preview" aria-hidden="true">
-          <div class="mini-window">
-            <div class="app-icon">T</div>
-
-            <div class="mini-title">Taskio is connected to Trello</div>
-
-            <div class="mini-subtitle">
-              Authorization was received. Finish the setup inside VS Code.
-            </div>
-
-            <div class="mini-tags">
-              <span class="tag">VS Code</span>
-              <span class="tag">Trello</span>
-              <span class="tag">Taskio</span>
-            </div>
+          <div class="brand-card">
+            <div class="brand-title">TASKIO</div>
           </div>
         </div>
 
         <div class="content">
-          <h1>Return to VS Code to finish setup.</h1>
+          <h1 data-i18n="title">Return to VS Code to finish setup.</h1>
 
-          <p class="lead">
+          <p class="lead" data-i18n="lead">
             Trello has authorized access. Taskio now needs to open VS Code to save this connection in the extension.
           </p>
 
           <div id="status" class="status">
             <div>
-              <div id="statusTitle" class="status-title">
+              <div id="statusTitle" class="status-title" data-i18n="statusOpeningTitle">
                 Opening Taskio in VS Code…
               </div>
 
-              <div id="statusText" class="status-text">
-                When your browser asks for permission, choose
-                <strong>Open Visual Studio Code</strong>.
+              <div id="statusText" class="status-text" data-i18n="statusOpeningText">
+                When your browser asks for permission, choose Open Visual Studio Code.
               </div>
             </div>
           </div>
 
           <div id="actions" class="actions">
-            <button id="openButton" class="primary" type="button">
+            <button id="openButton" class="primary" type="button" data-i18n="openButton">
               Open in VS Code
             </button>
 
-            <button id="copyButton" class="secondary" type="button">
+            <button id="copyButton" class="secondary" type="button" data-i18n="copyButton">
               Copy link
             </button>
           </div>
@@ -408,21 +368,21 @@
           <div class="help-grid">
             <div class="help-item">
               <div class="help-number">01</div>
-              <p>Allow your browser to open Visual Studio Code.</p>
+              <p data-i18n="stepOne">Allow your browser to open Visual Studio Code.</p>
             </div>
 
             <div class="help-item">
               <div class="help-number">02</div>
-              <p>VS Code will bring you back to the Taskio extension.</p>
+              <p data-i18n="stepTwo">VS Code will bring you back to the Taskio extension.</p>
             </div>
 
             <div class="help-item">
               <div class="help-number">03</div>
-              <p>If nothing happens, click “Open in VS Code” again.</p>
+              <p data-i18n="stepThree">If nothing happens, click “Open in VS Code” again.</p>
             </div>
           </div>
 
-          <p class="footer-note">
+          <p class="footer-note" data-i18n="footerNote">
             Browsers may ask for confirmation before opening installed apps. This is expected.
           </p>
         </div>
@@ -431,6 +391,87 @@
 
     <script>
       (function () {
+        const translations = {
+          en: {
+            pageTitle: "Taskio • Trello Auth",
+            title: "Return to VS Code to finish setup.",
+            lead:
+              "Trello has authorized access. Taskio now needs to open VS Code to save this connection in the extension.",
+            statusOpeningTitle: "Opening Taskio in VS Code…",
+            statusOpeningText:
+              "When your browser asks for permission, choose Open Visual Studio Code.",
+            openButton: "Open in VS Code",
+            copyButton: "Copy link",
+            stepOne: "Allow your browser to open Visual Studio Code.",
+            stepTwo: "VS Code will bring you back to the Taskio extension.",
+            stepThree: "If nothing happens, click “Open in VS Code” again.",
+            footerNote:
+              "Browsers may ask for confirmation before opening installed apps. This is expected.",
+            missingTokenTitle: "Authentication token was not found.",
+            missingTokenText: "Return to VS Code and try connecting Trello again.",
+            requestSentTitle: "Request sent to VS Code.",
+            requestSentText:
+              "If your browser shows a prompt, choose Open Visual Studio Code.",
+            linkCopiedTitle: "Link copied.",
+            linkCopiedText:
+              "Use this link to open VS Code manually if your browser does not redirect.",
+            copyErrorTitle: "Could not copy the link.",
+            copyErrorText:
+              "Click Open in VS Code again or restart the connection from Taskio.",
+          },
+
+          pt: {
+            pageTitle: "Taskio • Autenticação Trello",
+            title: "Volte para o VS Code para finalizar.",
+            lead:
+              "O Trello autorizou o acesso. Agora o Taskio precisa abrir o VS Code para salvar essa conexão na extensão.",
+            statusOpeningTitle: "Abrindo o Taskio no VS Code…",
+            statusOpeningText:
+              "Quando o navegador pedir permissão, escolha Abrir Visual Studio Code.",
+            openButton: "Abrir no VS Code",
+            copyButton: "Copiar link",
+            stepOne: "Permita que o navegador abra o Visual Studio Code.",
+            stepTwo: "O VS Code vai levar você de volta para a extensão Taskio.",
+            stepThree: "Se nada acontecer, clique em “Abrir no VS Code” novamente.",
+            footerNote:
+              "O navegador pode pedir confirmação antes de abrir aplicativos instalados. Isso é esperado.",
+            missingTokenTitle: "Token de autenticação não encontrado.",
+            missingTokenText: "Volte para o VS Code e tente conectar o Trello novamente.",
+            requestSentTitle: "Solicitação enviada para o VS Code.",
+            requestSentText:
+              "Se o navegador mostrar um aviso, escolha Abrir Visual Studio Code.",
+            linkCopiedTitle: "Link copiado.",
+            linkCopiedText:
+              "Use este link para abrir o VS Code manualmente se o navegador não redirecionar.",
+            copyErrorTitle: "Não foi possível copiar o link.",
+            copyErrorText:
+              "Clique em Abrir no VS Code novamente ou reinicie a conexão pelo Taskio.",
+          },
+        };
+
+        function getPreferredLanguage() {
+          const browserLanguage = (navigator.language || "en").toLowerCase();
+
+          if (browserLanguage.startsWith("pt")) {
+            return "pt";
+          }
+
+          return "en";
+        }
+
+        const lang = getPreferredLanguage();
+        const t = translations[lang];
+
+        document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
+        document.title = t.pageTitle;
+
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          const key = element.getAttribute("data-i18n");
+          if (t[key]) {
+            element.textContent = t[key];
+          }
+        });
+
         const hashParams = new URLSearchParams((location.hash || "").replace(/^#/, ""));
         const queryParams = new URLSearchParams(location.search || "");
 
@@ -470,12 +511,7 @@
         }
 
         if (!token) {
-          setStatus(
-            "error",
-            "Authentication token was not found.",
-            "Return to VS Code and try connecting Trello again."
-          );
-
+          setStatus("error", t.missingTokenTitle, t.missingTokenText);
           actions.classList.add("hidden");
           return;
         }
@@ -489,12 +525,7 @@
           (state ? "&state=" + encodeURIComponent(state) : "");
 
         function openVSCode() {
-          setStatus(
-            "success",
-            "Request sent to VS Code.",
-            "If your browser shows a prompt, choose Open Visual Studio Code."
-          );
-
+          setStatus("success", t.requestSentTitle, t.requestSentText);
           window.location.href = callbackUri;
         }
 
@@ -503,19 +534,9 @@
         copyButton.addEventListener("click", async () => {
           try {
             await navigator.clipboard.writeText(callbackUri);
-
-            setStatus(
-              "success",
-              "Link copied.",
-              "Use this link to open VS Code manually if your browser does not redirect."
-            );
+            setStatus("success", t.linkCopiedTitle, t.linkCopiedText);
           } catch (error) {
-            setStatus(
-              "error",
-              "Could not copy the link.",
-              "Click Open in VS Code again or restart the connection from Taskio."
-            );
-
+            setStatus("error", t.copyErrorTitle, t.copyErrorText);
             console.log("Taskio VS Code callback URI:", callbackUri);
           }
         });

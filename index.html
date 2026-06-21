@@ -4,8 +4,431 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Taskio • Trello Auth</title>
+
+    <style>
+      :root {
+        --bg: #05030a;
+        --surface: #11101a;
+        --surface-2: #171622;
+        --surface-3: #201d31;
+
+        --text: #f7f2ff;
+        --muted: #a39aad;
+        --muted-2: #7f758d;
+
+        --purple: #7c3aed;
+        --purple-2: #5b21b6;
+        --purple-3: #a78bfa;
+
+        --red: #ef4444;
+        --red-2: #7f1d1d;
+        --red-3: #fecaca;
+
+        --border: rgba(255, 255, 255, 0.09);
+        --border-strong: rgba(255, 255, 255, 0.15);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100%;
+        background: var(--bg);
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 18% 16%, rgba(124, 58, 237, 0.32), transparent 30%),
+          linear-gradient(135deg, #211044 0%, #0d0718 42%, #05030a 100%);
+        display: grid;
+        place-items: center;
+        padding: 32px 18px;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 44px 44px;
+        mask-image: radial-gradient(circle at center, black, transparent 74%);
+      }
+
+      .shell {
+        width: min(100%, 760px);
+        position: relative;
+      }
+
+      .auth-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 28px;
+        background: rgba(13, 12, 21, 0.94);
+        border: 1px solid var(--border);
+        box-shadow:
+          0 30px 90px rgba(0, 0, 0, 0.56),
+          0 0 0 1px rgba(124, 58, 237, 0.06);
+        backdrop-filter: blur(14px);
+      }
+
+      .top-preview {
+        position: relative;
+        min-height: 128px;
+        padding: 24px;
+        border-bottom: 1px solid var(--border);
+        background:
+          linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(0, 0, 0, 0.08)),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.045), transparent);
+      }
+
+      .mini-window {
+        position: relative;
+        max-width: 520px;
+        min-height: 86px;
+        border-radius: 20px;
+        background: rgba(12, 11, 20, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 18px 56px rgba(0, 0, 0, 0.3);
+        padding: 18px 18px 18px 76px;
+      }
+
+      .app-icon {
+        position: absolute;
+        left: 18px;
+        top: 18px;
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        font-weight: 900;
+        letter-spacing: -0.05em;
+      }
+
+      .mini-title {
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .mini-subtitle {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .mini-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+      }
+
+      .tag {
+        border-radius: 999px;
+        padding: 5px 9px;
+        color: #ddd6fe;
+        background: rgba(124, 58, 237, 0.14);
+        border: 1px solid rgba(167, 139, 250, 0.16);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .content {
+        position: relative;
+        padding: 36px 34px 34px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 580px;
+        font-size: clamp(30px, 5vw, 46px);
+        line-height: 1;
+        letter-spacing: -0.065em;
+      }
+
+      .lead {
+        margin: 18px 0 0;
+        max-width: 580px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .status {
+        margin-top: 28px;
+        padding: 17px;
+        border-radius: 20px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
+        border: 1px solid var(--border);
+      }
+
+      .status-title {
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+
+      .status-text {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .status.success {
+        border-color: rgba(124, 58, 237, 0.28);
+        background:
+          linear-gradient(180deg, rgba(124, 58, 237, 0.1), rgba(255, 255, 255, 0.014));
+      }
+
+      .status.error {
+        border-color: rgba(239, 68, 68, 0.45);
+        background:
+          linear-gradient(180deg, rgba(239, 68, 68, 0.16), rgba(127, 29, 29, 0.1)),
+          rgba(18, 10, 14, 0.92);
+      }
+
+      .status.error .status-title {
+        color: var(--red-3);
+      }
+
+      .status.error .status-text {
+        color: #fca5a5;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      button {
+        appearance: none;
+        border: 0;
+        min-height: 50px;
+        border-radius: 16px;
+        padding: 0 18px;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+          transform 0.16s ease,
+          border-color 0.16s ease,
+          background 0.16s ease,
+          opacity 0.16s ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .primary {
+        color: white;
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        box-shadow:
+          0 14px 30px rgba(91, 33, 182, 0.28),
+          inset 0 1px 0 rgba(255, 255, 255, 0.16);
+      }
+
+      .primary:hover {
+        opacity: 0.94;
+      }
+
+      .secondary {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.032);
+        border: 1px solid var(--border-strong);
+      }
+
+      .secondary:hover {
+        background: rgba(255, 255, 255, 0.055);
+      }
+
+      .help-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 26px;
+      }
+
+      .help-item {
+        min-height: 104px;
+        border-radius: 18px;
+        padding: 14px;
+        background: rgba(255, 255, 255, 0.028);
+        border: 1px solid var(--border);
+      }
+
+      .help-number {
+        color: #ddd6fe;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+      }
+
+      .help-item p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .footer-note {
+        margin-top: 22px;
+        color: var(--muted-2);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 680px) {
+        body {
+          padding: 18px;
+          align-items: start;
+        }
+
+        .auth-card {
+          border-radius: 24px;
+        }
+
+        .top-preview {
+          padding: 18px;
+          min-height: 112px;
+        }
+
+        .mini-window {
+          padding: 16px 16px 16px 68px;
+          border-radius: 18px;
+        }
+
+        .app-icon {
+          left: 16px;
+          top: 16px;
+          width: 38px;
+          height: 38px;
+          border-radius: 13px;
+        }
+
+        .content {
+          padding: 28px 20px 22px;
+        }
+
+        .actions {
+          grid-template-columns: 1fr;
+        }
+
+        .help-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </head>
+
   <body>
+    <main class="shell">
+      <section class="auth-card">
+        <div class="top-preview" aria-hidden="true">
+          <div class="mini-window">
+            <div class="app-icon">T</div>
+
+            <div class="mini-title">Taskio is connected to Trello</div>
+
+            <div class="mini-subtitle">
+              Authorization was received. Finish the setup inside VS Code.
+            </div>
+
+            <div class="mini-tags">
+              <span class="tag">VS Code</span>
+              <span class="tag">Trello</span>
+              <span class="tag">Taskio</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <h1>Return to VS Code to finish setup.</h1>
+
+          <p class="lead">
+            Trello has authorized access. Taskio now needs to open VS Code to save this connection in the extension.
+          </p>
+
+          <div id="status" class="status">
+            <div>
+              <div id="statusTitle" class="status-title">
+                Opening Taskio in VS Code…
+              </div>
+
+              <div id="statusText" class="status-text">
+                When your browser asks for permission, choose
+                <strong>Open Visual Studio Code</strong>.
+              </div>
+            </div>
+          </div>
+
+          <div id="actions" class="actions">
+            <button id="openButton" class="primary" type="button">
+              Open in VS Code
+            </button>
+
+            <button id="copyButton" class="secondary" type="button">
+              Copy link
+            </button>
+          </div>
+
+          <div class="help-grid">
+            <div class="help-item">
+              <div class="help-number">01</div>
+              <p>Allow your browser to open Visual Studio Code.</p>
+            </div>
+
+            <div class="help-item">
+              <div class="help-number">02</div>
+              <p>VS Code will bring you back to the Taskio extension.</p>
+            </div>
+
+            <div class="help-item">
+              <div class="help-number">03</div>
+              <p>If nothing happens, click “Open in VS Code” again.</p>
+            </div>
+          </div>
+
+          <p class="footer-note">
+            Browsers may ask for confirmation before opening installed apps. This is expected.
+          </p>
+        </div>
+      </section>
+    </main>
+
     <script>
       (function () {
         const hashParams = new URLSearchParams((location.hash || "").replace(/^#/, ""));
@@ -14,24 +437,50 @@
         const token = hashParams.get("token") || "";
         const state = hashParams.get("state") || queryParams.get("state") || "";
 
-        // Prefer embedding the scheme in the state: "<nonce>.<scheme>".
         let vscodeScheme = "vscode";
+
         const schemeFromState = (() => {
           const lastDot = state.lastIndexOf(".");
           if (lastDot <= 0) return "";
           return state.slice(lastDot + 1);
         })();
-        if (schemeFromState) vscodeScheme = schemeFromState;
+
+        if (schemeFromState) {
+          vscodeScheme = schemeFromState;
+        }
 
         const extensionId = "taskio.taskio";
 
+        const status = document.getElementById("status");
+        const statusTitle = document.getElementById("statusTitle");
+        const statusText = document.getElementById("statusText");
+        const openButton = document.getElementById("openButton");
+        const copyButton = document.getElementById("copyButton");
+        const actions = document.getElementById("actions");
+
+        function setStatus(type, title, text) {
+          status.classList.remove("success", "error");
+
+          if (type) {
+            status.classList.add(type);
+          }
+
+          statusTitle.textContent = title;
+          statusText.textContent = text;
+        }
+
         if (!token) {
-          document.body.textContent =
-            "No token found in URL fragment. Please return to VS Code and try again.";
+          setStatus(
+            "error",
+            "Authentication token was not found.",
+            "Return to VS Code and try connecting Trello again."
+          );
+
+          actions.classList.add("hidden");
           return;
         }
 
-        const uri =
+        const callbackUri =
           vscodeScheme +
           "://" +
           extensionId +
@@ -39,7 +488,39 @@
           encodeURIComponent(token) +
           (state ? "&state=" + encodeURIComponent(state) : "");
 
-        location.replace(uri);
+        function openVSCode() {
+          setStatus(
+            "success",
+            "Request sent to VS Code.",
+            "If your browser shows a prompt, choose Open Visual Studio Code."
+          );
+
+          window.location.href = callbackUri;
+        }
+
+        openButton.addEventListener("click", openVSCode);
+
+        copyButton.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(callbackUri);
+
+            setStatus(
+              "success",
+              "Link copied.",
+              "Use this link to open VS Code manually if your browser does not redirect."
+            );
+          } catch (error) {
+            setStatus(
+              "error",
+              "Could not copy the link.",
+              "Click Open in VS Code again or restart the connection from Taskio."
+            );
+
+            console.log("Taskio VS Code callback URI:", callbackUri);
+          }
+        });
+
+        window.setTimeout(openVSCode, 900);
       })();
     </script>
   </body>
